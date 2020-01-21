@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>validation</title>
+ <script src = "/socket.io/socket.io.js"></script>
+ <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+        
+        <div  class="form" style="text-align:center;">
+                <input id="test" type="search" placeholder="search user">
+                <button onclick="func()">search</button>
+                </div>
+     <form >
+      <div class="container" id="container">
+      <center><h1><marquee width = "40%">welcome to registraion</marquee></h1></center>
+     <div class="form">
+            <label for="username"><b>Username</b></label>
+     <input type="text" name="username"class="form-control" placeholder="Username" id="username" autocomplete="off">
+     <span id="usernames"class="text-danger font-weight-bold"></span>
+   </div>
+   <div class="form">
+        <label  for="email"><b>Email</b></label>
+        <input type="email" name="email"class="form-control" placeholder="Email address" id="email"autocomplete="off">
+        <span id="emails"class="text-danger font-weight-bold"></span>
+      </div>
+    <div class="form">
+            <label for="password"><b>Password</b></label>
+     <input type="password" name="password"class="form-control" id="password" placeholder="Password" autocomplete="off">
+     <span id="passwords"class="text-danger font-weight-bold"></span>
+   </div>
+   <div class="form">
+        <label for="password"><b>Confirm password</b></label>
+        <input type="password" name="conpass"class="form-control" id="confirmpass" placeholder="confirm Password" autocomplete="off">
+        <span id="confrmpass"class="text-danger font-weight-bold"></span>
+      </div>
+   <div class="form">
+        <label for="phone"><b>Phone</b></label>
+        <input  name="phone"class="form-control" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+        type = "number"
+        maxlength = "10"placeholder="phone number" id="phone"autocomplete="off">
+        <span id="phones"class="text-danger font-weight-bold"></span>
+      </div>
+      <button type = "button" value="submit" class= "btn" onclick="validation()" autocomplete="off">
+            submit
+        </button>
+</form></div></div>
+<script >
+    var socket = io();
+    function func(){
+              var value= document.getElementById('test').value;
+              document.getElementById('test').value=" ";
+          socket.emit('sample',value);
+          socket.on('details',function(details){
+            var two= JSON.stringify(details);
+        document.getElementById.innerHTML += alert(two);
+        });
+            }
+  function validation(){
+   var username=document.getElementById('username').value;
+   var email=document.getElementById('email').value;
+   var password=document.getElementById('password').value;
+   var confirmpass=document.getElementById('confirmpass').value;
+   var phone=document.getElementById('phone').value;
+   if(username==""){
+    document.getElementById("usernames").innerHTML="Please fill the user name field";
+    return false;
+   }
+   if((username.length<=5)||(username.length>=20)){
+    document.getElementById("usernames").innerHTML="The length must between 5 to 20 ";
+    return false;
+   }
+   if(!isNaN(username)){
+    document.getElementById("usernames").innerHTML="Only Charecters are allowed";
+    return false;
+   }
+   if(email==""){
+    document.getElementById("emails").innerHTML="Please fill this field";
+    return false;
+   }
+   if(email.indexOf('@')<=0){
+    document.getElementById("emails").innerHTML="incorrect email"
+    return false;
+   }
+   if((email.charAt(email.length-4)!='.')&&(email.charAt(email.length-3)!='.')){
+    document.getElementById("emails").innerHTML="**.Inavalid position";
+    return false;
+   }
+   if(password==""){
+    document.getElementById("passwords").innerHTML="Please fill this field";
+    return false;
+   }
+   if((password.length<=5)||(password.length>=20)){
+    document.getElementById("passwords").innerHTML="The length must between 5 to 20 ";
+    return false;
+   }
+   if(password!=confirmpass){
+    document.getElementById("confrmpass").innerHTML="Passwords are not matching";
+    return false;
+   }
+   if(confirmpass==""){
+    document.getElementById("confrmpass").innerHTML="Please fill this field";
+    return false;
+   }
+   if(phone==""){
+    document.getElementById("phones").innerHTML="Please fill this field";
+    return false;
+   }
+   if(isNaN(phone)){
+    document.getElementById("phones").innerHTML="Please enter only digits";
+    return false;
+   }
+   if(phone.length!=10){
+    document.getElementById("phones").innerHTML="NUmber should be in 10 digits";
+    return false;
+   }
+   var data= {username:username,email:email, password:password,phone:phone,confirmpass:confirmpass};
+   socket.emit('setuser',data);
+  }
+ </script>
+   <style>
+   body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: rgb(152, 187, 145);
+}    h1{ color:rgb(209, 65, 238) 
+        }
+      container {outline-color:red;}
+     container.dotted {outline-style: dotted;}
+      * {
+  box-sizing: border-box;
+   }
+   .container {
+  padding: 16px;
+  width: 100%;
+  outline-color:red;
+  outline-style: dotted;
+  background-color: white;
+}
+input[type=text], input[type=password],input[type=number],input[type=email]{
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus,input[type=number]:focus,input[type=number]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+.btn{
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity:1;
+}
+form{
+   margin: 10px auto;
+   width: 1000px;
+   color:black;
+}
+   </style>
+</body>
+</html
